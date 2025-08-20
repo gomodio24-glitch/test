@@ -1,0 +1,25 @@
+import requests
+from bs4 import BeautifulSoup
+import os
+from urllib.parse import urljoin
+
+url = "http://ssacademy.dothome.co.kr/0609_02.html"
+response = requests.get(url)
+response.encoding = 'utf-8'
+html_doc = response.text
+
+soup = BeautifulSoup(html_doc, 'html.parser')
+os.makedirs("img2", exist_ok=True)
+
+# div.gallery, div.flower_pic 안의 이미지 모두 가져오기
+items = soup.select('div.gallery >img, div.flower_pic img')
+
+for item in items:
+    img_url = urljoin(url, item['src'])
+    filename = os.path.basename(img_url)
+    filen_name = filename.replace('0','#00')
+    print(filen_name)
+    img_resp = requests.get(img_url)    
+    with open(os.path.join("img2", filen_name), 'wb') as f:
+        f.write(img_resp.content)
+    print(f"이미지 저장 성공: {filename}")

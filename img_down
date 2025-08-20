@@ -1,3 +1,5 @@
+git reset --soft HEAD~1
+
 import requests
 from bs4 import BeautifulSoup
 import os
